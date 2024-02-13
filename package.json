@@ -7,6 +7,9 @@
     "test": "test"
   },
   "scripts": {
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "pretest": "npm run lint",
     "test": "tap \"test/**/*.test.js\"",
     "start": "fastify start -l info app.js",
     "dev": "fastify start -w -l info -P app.js"
@@ -22,6 +25,7 @@
     "fastify-plugin": "^4.0.0"
   },
   "devDependencies": {
+    "standard": "^17.1.0",
     "tap": "^16.1.0"
   }
 }
