@@ -1,5 +1,10 @@
 module.exports = {
-  logger: true,
+  logger: {
+    level: 'info',
+    transport: {
+      target: 'pino-pretty'
+    }
+  },
   ajv: {
     customOptions: {
       removeAdditional: 'all'
