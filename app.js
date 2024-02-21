@@ -3,11 +3,13 @@
 const path = require('node:path')
 const AutoLoad = require('@fastify/autoload')
 
-// Pass --options via CLI arguments in command to enable these options.
-const options = {}
-
 module.exports = async function (fastify, opts) {
   // Place here your custom code!
+
+  fastify.register(AutoLoad, {
+    dir: path.join(__dirname, 'schemas'),
+    indexPattern: /^loader.js$/i
+  })
 
   // Do not touch the following lines
 
@@ -16,6 +18,8 @@ module.exports = async function (fastify, opts) {
   // through your application
   fastify.register(AutoLoad, {
     dir: path.join(__dirname, 'plugins'),
+    ignorePattern: /.*.no-load\.js/,
+    indexPattern: /^no$/i,
     options: Object.assign({}, opts)
   })
 
@@ -23,8 +27,11 @@ module.exports = async function (fastify, opts) {
   // define your routes in one of these
   fastify.register(AutoLoad, {
     dir: path.join(__dirname, 'routes'),
+    indexPattern: /.*routes(\.js|\.cjs)$/i,
+    autoHooks: true,
+    cascadeHooks: true,
     options: Object.assign({}, opts)
   })
 }
 
-module.exports.options = options
+module.exports.options = require('./configs/server-options')

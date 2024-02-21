@@ -11,8 +11,8 @@
     "lint:fix": "standard --fix",
     "pretest": "npm run lint",
     "test": "tap \"test/**/*.test.js\"",
-    "start": "fastify start -l info app.js",
-    "dev": "fastify start -w -l info -P app.js"
+    "start": "fastify start --options app.js",
+    "dev": "npm run start -- --watch --pretty-logs"
   },
   "keywords": [],
   "author": "",
