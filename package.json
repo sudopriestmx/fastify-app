@@ -12,7 +12,9 @@
     "pretest": "npm run lint",
     "test": "tap \"test/**/*.test.js\"",
     "start": "fastify start --options app.js",
-    "dev": "npm run start -- --watch"
+    "dev": "npm run start -- --watch",
+    "mongo:start": "docker run -d -p 27017:27017 --rm --name fastify-mongo mongo:6",
+    "mongo:stop": "docker container stop fastify-mongo"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +22,7 @@
   "dependencies": {
     "@fastify/autoload": "^5.0.0",
     "@fastify/env": "^4.3.0",
+    "@fastify/mongodb": "^8.0.0",
     "@fastify/sensible": "^5.0.0",
     "fastify": "^4.0.0",
     "fastify-cli": "^5.9.0",
