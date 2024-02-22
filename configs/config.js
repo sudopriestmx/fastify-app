@@ -6,4 +6,10 @@ module.exports = fp(async function configLoader(fastify, opts) {
         confKey: 'secrets',
         schema: fastify.getSchema('schema:dotenv')
     })
+    fastify.decorate('config', {
+        mongo: {
+            forceClose: true,
+            url: fastify.secrets.MONGO_URL
+        }
+    })
 }, { name: 'application-config' })
