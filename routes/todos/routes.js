@@ -4,7 +4,17 @@ module.exports = async function todoRoutes (fastify, _opts) {
         method: 'GET',
         url: '/',
         handler: async function listTodo (request, reply) {
-            return { data: [], totalCount: 0 }
+            const { skip, limit, title } = request.query
+            const filter = title ? { title: new RexExp(title, 'i') } : {}
+            const data = await todos
+                .find(filter, {
+                    limit,
+                    skip
+                })
+                .toArray()
+            const totalCount = await todos.countDocuments(filter)
+            return { data, totalCount }
+
         }
     })
     fastify.route({
@@ -32,12 +42,21 @@ module.exports = async function todoRoutes (fastify, _opts) {
         method: 'GET',
         url: '/:id',
         handler: async function readTodo (request, reply) {
-            return {}
+            logger.info('GET item')
+            const todo = await todos.findOne(
+                {_id: new this.mongo.ObjectId(request.params.id)},
+                { projection: { _id: 0 }},     
+            )
+            if (!todo) {
+                reply.code(404)
+                return { error: 'Todo not found'}
+            }
+            return todo
         }
     })
     fastify.route({
         method: 'PUT',
-        url: './:id',
+        url: '/:id',
         handler: async function updateTodo (request, reply) {
             reply.code(204)
         }
