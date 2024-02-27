@@ -42,14 +42,13 @@ module.exports = async function todoRoutes (fastify, _opts) {
         method: 'GET',
         url: '/:id',
         handler: async function readTodo (request, reply) {
-            logger.info('GET item')
             const todo = await todos.findOne(
-                {_id: new this.mongo.ObjectId(request.params.id)},
-                { projection: { _id: 0 }},     
+                { _id: new this.mongo.ObjectId(request.params.id) },
+                { projection: { _id: 0 } }
             )
             if (!todo) {
                 reply.code(404)
-                return { error: 'Todo not found'}
+                return { error: 'Todo not found' }
             }
             return todo
         }
