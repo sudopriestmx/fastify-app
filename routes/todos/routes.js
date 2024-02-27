@@ -1,4 +1,5 @@
 module.exports = async function todoRoutes (fastify, _opts) {
+    const todos = fastify.mongo.db.collection('todos')
     fastify.route({
         method: 'GET',
         url: '/',
@@ -10,7 +11,21 @@ module.exports = async function todoRoutes (fastify, _opts) {
         method: 'POST',
         url: '/',
         handler: async function createTodo (request, reply) {
-            return { id: '123'}
+           const _id = new this.mongo.ObjectId()
+           const now = new Date()
+           const createdAt = now
+           const modifiedAt = now
+           const newTodo = {
+            _id,
+            id: _id,
+            ...request.body,
+            done: false,
+            createdAt,
+            modifiedAt
+           }
+           await todos.insertOne(newTodo)
+           reply.code(201)
+           return {id: _id}
         }
     })
     fastify.route({
