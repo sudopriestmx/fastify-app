@@ -35,19 +35,48 @@ module.exports = fp(
             }
         })
         fastify.post('/authenticate', {
-            //TODO implementation
+            schema: {
+                body: fastify.getSchema('schema:auth:register'),
+                response: {
+                    200: fastify.getSchema('schema:auth:token')
+                }
+            },
+            handler: async function authenticateHandler (request, reply) {
+                const user = await this.usersDataSource.readUser(request.body.username)
+                if (!user) {
+                    const err = new Error('Wrong credentials provided')
+                    err.statusCode = 401
+                    throw err
+                }
+                const { hash } = await generateHash(request.body.password, user.salt)
+                if (hash !== user.hash) {
+                    const err = new Error('Wrong credentials provided')
+                    err.statusCode = 401
+                    throw err
+                }
+                request.user = user
+                return refreshHandler(request, reply)
+            }
         })
         fastify.get('/me', {
             //TODO implementation
         })
         fastify.post('/refresh', {
-            //TODO implementation
+            onRequest: fastify.authenticate,
+            schema: {
+                headers: fastify.getSchema('schema:auth:token-header'),
+                response: {
+                    200: fastify.getSchema('schema:auth:token')
+                }
+            },
+            handler: refreshHandler
         })
         fastify.post('/logout', {
             //TODO implementation
         })
         async function refreshHandler (request, reply) {
-            //TODO implementation
+            const token = await request.generateToken()
+            return { token }
         }
     }, {
         name: 'auth.routes',
