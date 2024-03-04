@@ -59,7 +59,16 @@ module.exports = fp(
             }
         })
         fastify.get('/me', {
-            //TODO implementation
+            onRequest: fastify.authenticate,
+            schema: {
+                headers: fastify.getSchema('schema:auth:token-header'),
+                response: {
+                    200: fastify.getSchema('schema:user')
+                }
+            },
+            handler: async function meHandler (request, reply) {
+                return request.user
+            }
         })
         fastify.post('/refresh', {
             onRequest: fastify.authenticate,
