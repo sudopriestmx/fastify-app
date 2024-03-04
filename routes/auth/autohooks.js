@@ -7,8 +7,8 @@ module.exports = fp(async function userAutoHooks (fastify, opts) {
     fastify.register(schemas)
 
     fastify.decorate('usersDataSource', {
-        async readUser (userName) {
-            const user = await users.findOne({ userName })
+        async readUser (username) {
+            const user = await users.findOne({ username })
             return user
         },
         async createUser (user) {
