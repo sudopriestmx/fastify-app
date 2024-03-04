@@ -72,7 +72,11 @@ module.exports = fp(
             handler: refreshHandler
         })
         fastify.post('/logout', {
-            //TODO implementation
+            onRequest: fastify.authenticate,
+            handler: async function logoutHandler (request, reply) {
+                request.revokeToken()
+                reply.code(204)
+            }
         })
         async function refreshHandler (request, reply) {
             const token = await request.generateToken()
