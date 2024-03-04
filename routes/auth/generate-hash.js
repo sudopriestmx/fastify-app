@@ -1,4 +1,4 @@
-const crypto = require('node:cypto')
+const crypto = require('node:crypto')
 const util = require('node:util')
 
 const pbkdf2 = util.promisify(crypto.pbkdf2)

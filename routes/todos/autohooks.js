@@ -91,7 +91,6 @@ module.exports = fp(async function todoAutoHooks (fastify, opts) {
             }
         }
     })
-    fastify.decorate('todosDataSource', )
 }, {
     encapsulate: true,
     dependencies: ['@fastify/mongodb'],
