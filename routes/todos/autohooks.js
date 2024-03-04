@@ -14,7 +14,8 @@ module.exports = fp(async function todoAutoHooks (fastify, opts) {
                 filter = {},
                 projection = {},
                 skip = 0,
-                limit = 50
+                limit = 50,
+                asStream = false
             } = {}) {
                 if (filter.title) {
                     filter.title = new RegExp(filter.title, 'i')
@@ -22,14 +23,17 @@ module.exports = fp(async function todoAutoHooks (fastify, opts) {
                     delete filter.title
                 }
                 filter.userId = request.user.id
-                const todoDocuments = await todos
-                    .find(filter, {
-                        projection: { ...projection, _id: 0},
-                        limit,
-                        skip
-                    })
-                    .toArray()
-                return todoDocuments
+
+                const cursor = todos.find(filter, {
+                    projection: { ...projection, _id: 0 },
+                    limit,
+                    skip
+                })
+                
+                if (asStream) {
+                    return cursor.stream() // [6]
+                }
+                return cursor.toArray()
             },
             async createTodo ({title}) {
                 const _id = new fastify.mongo.ObjectId()
@@ -44,7 +48,25 @@ module.exports = fp(async function todoAutoHooks (fastify, opts) {
                     createdAt: now,
                     modifiedAt: now
                 })
-                return instertedId
+                return insertedId
+            },
+            async createTodos (todoList) {
+                const now = new Date()
+                const userId = request.user.id
+                const toInsert = todoList.map(rawTodo => {
+                    const _id = new fastify.mongo.ObjectId()
+
+                    return {
+                        _id,
+                        userId,
+                        ...rawTodo,
+                        id: _id,
+                        createdAt: now,
+                        modifiedAt: now
+                    }
+                })
+                await todos.insertMany(toInsert)
+                return toInsert.map((todo) => todo._id)
             },
             async readTodo (id, projection = {}) {
                 const todo = await todos.findOne(
