@@ -1,4 +1,5 @@
 module.exports = async function todoRoutes (fastify, _opts) {
+    fastify.addHook('onRequest', fastify.authenticate)
     fastify.route({
         method: 'GET',
         url: '/',
