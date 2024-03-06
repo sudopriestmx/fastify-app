@@ -1,7 +1,9 @@
 const fp = require('fastify-plugin')
+const fastifySwagger = require('@fastify/swagger')
+const fastifySwaggerUI = require('@fastify/swagger-ui')
 
 module.exports = fp(async function swaggerPlugin (fastify, opts) {
-  fastify.register(require('@fastify/swagger'), {
+  fastify.register(fastifySwagger, {
     swagger: {
       info: {
         title: 'Fastify app',
@@ -10,7 +12,7 @@ module.exports = fp(async function swaggerPlugin (fastify, opts) {
       }
     }
   })
-  fastify.register(require('@fastify/swagger-ui'), {
+  fastify.register(fastifySwaggerUI, {
     routePrefix: '/docs',
     exposeRoute: fastify.secrets.NODE_ENV !== 'production'
   })
