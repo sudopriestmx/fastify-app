@@ -21,7 +21,7 @@ function dockerConsole () {
             const containers = await docker.listContainers()
             return containers.find(running => {
                 return running.Names.some(name => {
-                    name.includes(container.name)
+                    return name.includes(container.name)
                 })
             })
         },
