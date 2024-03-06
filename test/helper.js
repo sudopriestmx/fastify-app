@@ -1,19 +1,24 @@
-const t = require('tap')
 const fcli = require('fastify-cli/helper')
 
 const startArgs = '--options app.js'
 const defaultEnv = {
-    NODE_ENV: 'test',
-    MONGO_URL: 'mongodb://localhost:27017/test',
-    JWT_SECRET: 'secret-1234567890',
-    JWT_EXPIRE_IN: 8600
+  NODE_ENV: 'test',
+  MONGO_URL: 'mongodb://localhost:27017/test',
+  JWT_SECRET: 'secret-1234567890'
 }
-async function buildApp (t, env = defaultEnv, serverOptions) {
-    const app = await fcli.build(startArgs, { configFata: env }, serverOptions )
-    t.teardown(() => { app.close() })
-    return app
+
+function config (env) {
+  return {
+    configData: env
+  }
+}
+
+async function buildApp (t, env) {
+  const app = await fcli.build(startArgs, config({ ...defaultEnv, ...env }))
+  t.teardown(() => { app.close() })
+  return app
 }
 
 module.exports = {
-  buildApp,
+  buildApp
 }
