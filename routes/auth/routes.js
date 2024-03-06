@@ -1,6 +1,7 @@
+'use strict'
+
 const fp = require('fastify-plugin')
 const generateHash = require('./generate-hash')
-module.exports.prefixOverride = ''
 module.exports = fp(
     async function applicationAuth (fastify, opts) {
         fastify.post('/register' , {
@@ -97,3 +98,5 @@ module.exports = fp(
         encapsulate: true
     }
 )
+
+module.exports.prefixOverride = ''
