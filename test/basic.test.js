@@ -1,15 +1,18 @@
 const t = require('tap')
-const fcli = require('fastify-cli/helper')
-const startArgs = '--options app.js'
-const envParam = {
-    NODE_ENV: 'test',
-    MONGO_URL: 'mongodb://localhost:27017/test'
-}
-async function buildApp (t, env = envParam, serverOptions) {
-    const app = await fcli.build(startArgs, { configFata: env }, serverOptions )
-    t.teardown(() => { app.close() })
-    return app
-}
+
+const { buildApp } = require('./helper')
+const dockerHelper = require('./helper-docker')
+const { Containers } = dockerHelper
+const docker = dockerHelper()
+
+
+t.before(async function before () {
+    await docker.startContainer(Containers.mongo)
+})
+
+t.teardown(async () => {
+    await docker.stopContainer(Containers.mongo)
+})
 
 t.test('the application should start', async (t) => {
     const app = await buildApp(t)
