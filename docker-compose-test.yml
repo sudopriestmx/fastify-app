@@ -15,6 +15,7 @@ services:
     environment:
       JWT_SECRET: changethis
       MONGO_URL: mongodb://mongo:27017/todo
+      JWT_EXPIRE_IN: 8600
 
 volumes:
   data:
