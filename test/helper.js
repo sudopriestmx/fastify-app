@@ -13,9 +13,14 @@ function config (env) {
   }
 }
 
-async function buildApp (t, env) {
-  const app = await fcli.build(startArgs, config({ ...defaultEnv, ...env }))
-  t.teardown(() => { app.close() })
+async function buildApp (t, env, serverOptions) {
+  const app = await fcli.build(startArgs,
+    config({ ...defaultEnv, ...env }),
+    serverOptions
+  )
+  t.teardown(() => {
+    app.close()
+  })
   return app
 }
 

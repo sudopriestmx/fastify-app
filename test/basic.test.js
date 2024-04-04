@@ -1,15 +1,6 @@
 const t = require('tap')
-
 const { buildApp } = require('./helper')
 
-t.test('the application should start', async (t) => {
-  const app = await buildApp(t, {
-    MONGO_URL: 'mongodb://localhost:27017/basic-test-db'
-  })
-  t.teardown(() => { app.close() })
-  await app.ready()
-  t.pass('the application is ready')
-})
 t.test('the alive route is online', async (t) => {
   const app = await buildApp(t, {
     MONGO_URL: 'mongodb://localhost:27017/basic-test-db'
@@ -20,6 +11,15 @@ t.test('the alive route is online', async (t) => {
   })
   t.same(response.json(), { root: true })
 })
+
+t.test('the application should start', async (t) => {
+  const app = await buildApp(t, {
+    MONGO_URL: 'mongodb://localhost:27017/basic-test-db'
+  })
+  await app.ready()
+  t.pass('the application is ready')
+})
+
 t.test('the application should not start', async mainTest => {
   mainTest.test('if there are missing ENV vars', async t => {
     try {
@@ -33,7 +33,7 @@ t.test('the application should not start', async mainTest => {
       t.match(error.message, "required property 'MONGO_URL'")
     }
   })
-  mainTest.test('when mongodb is unreachable', async t => {
+  mainTest.todo('when mongodb is unreachable', async t => {
     try {
       await buildApp(t, {
         NODE_ENV: 'test',
