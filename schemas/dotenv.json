@@ -16,6 +16,9 @@
     },
     "JWT_SECRET": {
       "type": "string"
+    },
+    "LOG_LEVEL": {
+      "type": "string"
     }
   }
 }

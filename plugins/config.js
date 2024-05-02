@@ -12,6 +12,7 @@ module.exports = fp(async function configLoader (fastify, opts) {
     options.data = opts.configData
   }
   await fastify.register(fastifyEnv, options)
+  fastify.log.level = fastify.secrets.LOG_LEVEL
 },
 {
   name: 'application-config',

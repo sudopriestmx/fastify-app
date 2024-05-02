@@ -33,7 +33,7 @@ t.test('the application should not start', async mainTest => {
       t.match(error.message, "required property 'MONGO_URL'")
     }
   })
-  mainTest.todo('when mongodb is unreachable', async t => {
+  mainTest.test('when mongodb is unreachable', async t => {
     try {
       await buildApp(t, {
         NODE_ENV: 'test',

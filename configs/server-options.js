@@ -1,9 +1,13 @@
+const crypto = require('node:crypto')
+
+const loggerOptions = require('./logger-options')
 module.exports = {
-  logger: {
-    level: 'info',
-    transport: {
-      target: 'pino-pretty'
-    }
+  disableRequestLogging: true,
+  logger: loggerOptions,
+  requestIdLogLabel: 'requestId',
+  requestIdHeader: 'x-request-id',
+  genReqId (req) {
+    return req.headers['x-amz-request-id'] || crypto.randomUUID()
   },
   ajv: {
     customOptions: {
