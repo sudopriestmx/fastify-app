@@ -11,8 +11,8 @@ module.exports = async function todoRoutes (fastify, _opts) {
     },
     handler: async function listTodo (request, reply) {
       const { skip, limit, title } = request.query
-      const todos = await this.mongoDataSource.listTodos({ filter: { title }, skip, limit })
-      const totalCount = await this.mongoDataSource.countTodos()
+      const todos = await request.todosDataSource.listTodos({ filter: { title }, skip, limit })
+      const totalCount = await request.todosDataSource.countTodos()
       return { data: todos, totalCount }
     }
   })
@@ -26,7 +26,7 @@ module.exports = async function todoRoutes (fastify, _opts) {
       }
     },
     handler: async function createTodo (request, reply) {
-      const insertedId = await this.mongoDataSource.createTodo(request.body)
+      const insertedId = await request.todosDataSource.createTodo(request.body)
       reply.code(201)
       return { id: insertedId }
     }
@@ -41,7 +41,7 @@ module.exports = async function todoRoutes (fastify, _opts) {
       }
     },
     handler: async function readTodo (request, reply) {
-      const todo = await this.mongoDataSource.readTodo(request.params.id)
+      const todo = await request.todosDataSource.readTodo(request.params.id)
       if (!todo) {
         reply.code(404)
         return { error: 'Todo not found' }
@@ -57,7 +57,7 @@ module.exports = async function todoRoutes (fastify, _opts) {
       body: fastify.getSchema('schema:todo:update:body')
     },
     handler: async function updateTodo (request, reply) {
-      const res = await this.mongoDataSource.updateTodo(request.params.id, request.body)
+      const res = await request.todosDataSource.updateTodo(request.params.id, request.body)
       if (res.modifiedCount === 0) {
         reply.code(404)
         return { error: 'Todo not found' }
@@ -72,7 +72,7 @@ module.exports = async function todoRoutes (fastify, _opts) {
       params: fastify.getSchema('schema:todo:read:params')
     },
     handler: async function deleteTodo (request, reply) {
-      const res = await this.mongoDataSource.deleteTodo(request.params.id)
+      const res = await request.todosDataSource.deleteTodo(request.params.id)
       if (res.deletedCount === 0) {
         reply.code(404)
         return { error: 'Todo not found' }
@@ -88,7 +88,7 @@ module.exports = async function todoRoutes (fastify, _opts) {
     },
     handler: async function changeStatus (request, reply) {
       const done = request.params.status === 'done'
-      const res = await this.mongoDataSource.updateTodo(request.params.id, { done })
+      const res = await request.todosDataSource.updateTodo(request.params.id, { done })
       if (res.modifiedCount === 0) {
         reply.code(404)
         return { error: 'Todo not found ' }
