@@ -1,7 +1,7 @@
 {
   "name": "fastify-app",
   "version": "1.0.0",
-  "description": "This project was bootstrapped with Fastify-CLI.",
+  "description": "A basic to-do app built as part of the project from the book 'Accelerating Server-side development with Fastify.' by Manuel Spigolon, Maksim Sinik, and Matteo Colina",
   "main": "app.js",
   "directories": {
     "test": "test"
